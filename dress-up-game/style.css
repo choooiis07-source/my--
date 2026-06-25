@@ -1,0 +1,815 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.game-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 30px;
+    padding: 30px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+    text-align: center;
+    color: #764ba2;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.game-area {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* 캐릭터 영역 */
+.character-area {
+    background: linear-gradient(180deg, #ffecd2 0%, #fcb69f 100%);
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 300px;
+    min-height: 500px;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.1);
+}
+
+.character {
+    position: relative;
+    width: 200px;
+    height: 400px;
+}
+
+/* 몸통 부분 */
+.body-part {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* 머리 */
+.head {
+    top: 0;
+    width: 100px;
+    height: 100px;
+}
+
+.face {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    background: #ffdbac;
+    border-radius: 50%;
+    box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 눈 */
+.eyes {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 25px;
+}
+
+.eye {
+    width: 15px;
+    height: 20px;
+    background: #333;
+    border-radius: 50%;
+    position: relative;
+    animation: blink 3s infinite;
+}
+
+.eye::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+}
+
+@keyframes blink {
+    0%, 95%, 100% { transform: scaleY(1); }
+    97% { transform: scaleY(0.1); }
+}
+
+/* 입 */
+.mouth {
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 10px;
+    background: #ff6b6b;
+    border-radius: 0 0 20px 20px;
+}
+
+/* 블러셔 */
+.blush {
+    position: absolute;
+    bottom: 30px;
+    width: 20px;
+    height: 12px;
+    background: rgba(255, 150, 150, 0.5);
+    border-radius: 50%;
+}
+
+.blush.left {
+    left: 15px;
+}
+
+.blush.right {
+    right: 15px;
+}
+
+/* 머리 스타일 */
+.hair {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 70px;
+    border-radius: 60px 60px 0 0;
+    z-index: -1;
+}
+
+.default-hair {
+    background: #4a3728;
+}
+
+.default-hair::before {
+    content: '';
+    position: absolute;
+    top: 30px;
+    left: -10px;
+    width: 30px;
+    height: 80px;
+    background: #4a3728;
+    border-radius: 0 0 20px 20px;
+}
+
+.default-hair::after {
+    content: '';
+    position: absolute;
+    top: 30px;
+    right: -10px;
+    width: 30px;
+    height: 80px;
+    background: #4a3728;
+    border-radius: 0 0 20px 20px;
+}
+
+/* 헤어 스타일 옵션 */
+.hair-long {
+    background: #4a3728;
+    height: 80px;
+}
+
+.hair-long::before,
+.hair-long::after {
+    content: '';
+    position: absolute;
+    top: 30px;
+    width: 35px;
+    height: 120px;
+    background: #4a3728;
+    border-radius: 0 0 20px 20px;
+}
+
+.hair-long::before { left: -15px; }
+.hair-long::after { right: -15px; }
+
+.hair-short {
+    background: #ff6b6b;
+    height: 50px;
+    border-radius: 50px 50px 20px 20px;
+}
+
+.hair-short::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: -5px;
+    width: 25px;
+    height: 40px;
+    background: #ff6b6b;
+    border-radius: 0 0 15px 15px;
+}
+
+.hair-short::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    right: -5px;
+    width: 25px;
+    height: 40px;
+    background: #ff6b6b;
+    border-radius: 0 0 15px 15px;
+}
+
+.hair-twin {
+    background: #ffd93d;
+    height: 60px;
+}
+
+.hair-twin::before,
+.hair-twin::after {
+    content: '';
+    position: absolute;
+    top: 40px;
+    width: 40px;
+    height: 100px;
+    background: #ffd93d;
+    border-radius: 20px;
+}
+
+.hair-twin::before { left: -25px; }
+.hair-twin::after { right: -25px; }
+
+.hair-bob {
+    background: #6c5ce7;
+    height: 65px;
+    border-radius: 60px 60px 30px 30px;
+}
+
+.hair-bob::before {
+    content: '';
+    position: absolute;
+    top: 35px;
+    left: -8px;
+    width: 28px;
+    height: 50px;
+    background: #6c5ce7;
+    border-radius: 0 0 25px 25px;
+}
+
+.hair-bob::after {
+    content: '';
+    position: absolute;
+    top: 35px;
+    right: -8px;
+    width: 28px;
+    height: 50px;
+    background: #6c5ce7;
+    border-radius: 0 0 25px 25px;
+}
+
+/* 몸통 */
+.body {
+    top: 95px;
+    width: 80px;
+    height: 120px;
+    background: #ffdbac;
+    border-radius: 20px 20px 0 0;
+}
+
+/* 상의 */
+.outfit-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px 20px 0 0;
+}
+
+/* 기본 상의 */
+.top-basic {
+    background: #74b9ff;
+}
+
+.top-basic::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+}
+
+.top-dress {
+    background: linear-gradient(180deg, #fd79a8 0%, #e84393 100%);
+    border-radius: 20px 20px 10px 10px;
+}
+
+.top-dress::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 3px;
+}
+
+.top-hoodie {
+    background: #00b894;
+    border-radius: 25px 25px 0 0;
+}
+
+.top-hoodie::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 30px;
+    background: #00b894;
+    border-radius: 20px 20px 0 0;
+}
+
+.top-hoodie::after {
+    content: '';
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 25px;
+    height: 25px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+}
+
+.top-elegant {
+    background: linear-gradient(180deg, #a29bfe 0%, #6c5ce7 100%);
+}
+
+.top-elegant::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 15px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 0 0 20px 20px;
+}
+
+.top-sailor {
+    background: white;
+}
+
+.top-sailor::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background: #0984e3;
+    border-radius: 20px 20px 0 0;
+}
+
+.top-sailor::after {
+    content: '';
+    position: absolute;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 20px solid #0984e3;
+}
+
+/* 하의 */
+.legs {
+    top: 210px;
+    width: 80px;
+    height: 130px;
+    background: #ffdbac;
+}
+
+.outfit-bottom {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* 기본 하의 */
+.bottom-basic {
+    background: #636e72;
+    border-radius: 0 0 10px 10px;
+}
+
+.bottom-skirt {
+    background: #e17055;
+    height: 80px;
+    border-radius: 0 0 50% 50%;
+}
+
+.bottom-skirt-long {
+    background: linear-gradient(180deg, #fab1a0 0%, #e17055 100%);
+    height: 120px;
+    border-radius: 0 0 30% 30%;
+}
+
+.bottom-shorts {
+    background: #00cec9;
+    height: 50px;
+    border-radius: 0 0 15px 15px;
+}
+
+.bottom-jeans {
+    background: #0984e3;
+    border-radius: 0 0 5px 5px;
+}
+
+.bottom-jeans::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 80%;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* 신발 */
+.feet {
+    top: 335px;
+    width: 90px;
+    height: 40px;
+    display: flex;
+    gap: 10px;
+}
+
+.outfit-shoes {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+.outfit-shoes::before,
+.outfit-shoes::after {
+    content: '';
+    flex: 1;
+    background: #2d3436;
+    border-radius: 10px 10px 5px 5px;
+}
+
+.shoes-sneakers::before,
+.shoes-sneakers::after {
+    background: #d63031;
+    border-radius: 15px 15px 8px 8px;
+}
+
+.shoes-heels::before,
+.shoes-heels::after {
+    background: #e84393;
+    border-radius: 5px 5px 0 0;
+    height: 30px;
+}
+
+.shoes-boots::before,
+.shoes-boots::after {
+    background: #2d3436;
+    height: 50px;
+    border-radius: 10px 10px 5px 5px;
+    margin-top: -20px;
+}
+
+.shoes-sandals::before,
+.shoes-sandals::after {
+    background: #fdcb6e;
+    height: 15px;
+    border-radius: 5px;
+}
+
+/* 액세서리 */
+.accessory {
+    top: -30px;
+    width: 140px;
+    height: 140px;
+    pointer-events: none;
+}
+
+.accessory-bow {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+}
+
+.accessory-bow::before,
+.accessory-bow::after {
+    content: '';
+    position: absolute;
+    width: 25px;
+    height: 20px;
+    background: #ff6b6b;
+    border-radius: 50%;
+}
+
+.accessory-bow::before {
+    transform: rotate(-30deg);
+    left: 0;
+}
+
+.accessory-bow::after {
+    transform: rotate(30deg);
+    left: 20px;
+}
+
+.accessory-crown {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 30px;
+    background: linear-gradient(180deg, #ffd700 0%, #ffaa00 100%);
+    clip-path: polygon(0% 100%, 10% 30%, 25% 70%, 40% 0%, 55% 70%, 70% 30%, 85% 70%, 100% 100%);
+}
+
+.accessory-glasses {
+    position: absolute;
+    top: 45px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 25px;
+}
+
+.accessory-glasses::before,
+.accessory-glasses::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 25px;
+    border: 3px solid #2d3436;
+    border-radius: 50%;
+    background: rgba(100, 100, 255, 0.2);
+}
+
+.accessory-glasses::before { left: 5px; }
+.accessory-glasses::after { right: 5px; }
+
+.accessory-necklace {
+    position: absolute;
+    top: 95px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 20px;
+    border: 3px solid #ffd700;
+    border-top: none;
+    border-radius: 0 0 25px 25px;
+}
+
+.accessory-necklace::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    background: #e84393;
+    border-radius: 50%;
+}
+
+/* 의상 선택 패널 */
+.clothing-panel {
+    flex: 1;
+    min-width: 300px;
+    background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.category-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    flex: 1;
+    min-width: 60px;
+    padding: 12px 15px;
+    border: none;
+    background: white;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    color: #666;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.tab-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.clothing-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 15px;
+    min-height: 200px;
+    padding: 15px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.clothing-item {
+    aspect-ratio: 1;
+    border: 3px solid #e9ecef;
+    border-radius: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.clothing-item:hover {
+    transform: scale(1.1);
+    border-color: #667eea;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.clothing-item.selected {
+    border-color: #764ba2;
+    background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+    box-shadow: 0 0 15px rgba(118, 75, 162, 0.5);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.reset-btn {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+    color: white;
+}
+
+.random-btn {
+    background: linear-gradient(135deg, #feca57 0%, #ff9f43 100%);
+    color: white;
+}
+
+.save-btn {
+    background: linear-gradient(135deg, #48dbfb 0%, #0abde3 100%);
+    color: white;
+}
+
+.action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* 저장된 코디 */
+.saved-outfits {
+    margin-top: 30px;
+    padding: 20px;
+    background: linear-gradient(180deg, #fff5f5 0%, #ffe0e0 100%);
+    border-radius: 20px;
+}
+
+.saved-outfits h3 {
+    text-align: center;
+    color: #764ba2;
+    margin-bottom: 15px;
+}
+
+.outfits-grid {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding: 10px;
+}
+
+.saved-outfit {
+    min-width: 100px;
+    height: 120px;
+    background: white;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.saved-outfit:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.saved-outfit .outfit-preview {
+    font-size: 40px;
+}
+
+.saved-outfit .outfit-label {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.saved-outfit .delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.saved-outfit:hover .delete-btn {
+    opacity: 1;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .game-area {
+        flex-direction: column;
+    }
+    
+    h1 {
+        font-size: 1.8em;
+    }
+    
+    .category-tabs {
+        flex-wrap: wrap;
+    }
+    
+    .tab-btn {
+        min-width: 50px;
+        padding: 10px;
+        font-size: 12px;
+    }
+}

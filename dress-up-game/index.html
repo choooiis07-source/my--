@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>옷입히기 게임</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>👗 옷입히기 게임 👗</h1>
+        
+        <div class="game-area">
+            <!-- 캐릭터 영역 -->
+            <div class="character-area">
+                <div class="character">
+                    <!-- 기본 캐릭터 -->
+                    <div class="body-part head">
+                        <div class="face">
+                            <div class="eyes">
+                                <div class="eye left"></div>
+                                <div class="eye right"></div>
+                            </div>
+                            <div class="mouth"></div>
+                            <div class="blush left"></div>
+                            <div class="blush right"></div>
+                        </div>
+                        <div class="hair default-hair"></div>
+                    </div>
+                    <div class="body-part body">
+                        <div class="outfit-top" id="outfit-top"></div>
+                    </div>
+                    <div class="body-part legs">
+                        <div class="outfit-bottom" id="outfit-bottom"></div>
+                    </div>
+                    <div class="body-part feet">
+                        <div class="outfit-shoes" id="outfit-shoes"></div>
+                    </div>
+                    <div class="body-part accessory" id="outfit-accessory"></div>
+                </div>
+            </div>
+            
+            <!-- 의상 선택 영역 -->
+            <div class="clothing-panel">
+                <div class="category-tabs">
+                    <button class="tab-btn active" data-category="hair">헤어</button>
+                    <button class="tab-btn" data-category="top">상의</button>
+                    <button class="tab-btn" data-category="bottom">하의</button>
+                    <button class="tab-btn" data-category="shoes">신발</button>
+                    <button class="tab-btn" data-category="accessory">액세서리</button>
+                </div>
+                
+                <div class="clothing-items" id="clothing-items">
+                    <!-- 아이템들이 여기에 동적으로 추가됩니다 -->
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="action-btn reset-btn" id="reset-btn">🔄 초기화</button>
+                    <button class="action-btn random-btn" id="random-btn">🎲 랜덤</button>
+                    <button class="action-btn save-btn" id="save-btn">💾 저장</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 저장된 코디 목록 -->
+        <div class="saved-outfits" id="saved-outfits">
+            <h3>💖 저장된 코디</h3>
+            <div class="outfits-grid" id="outfits-grid"></div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
