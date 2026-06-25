@@ -1,0 +1,525 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #0a1a3e 100%);
+    min-height: 100vh;
+    overflow: hidden;
+    user-select: none;
+}
+
+/* 화면 전환 */
+.screen {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.screen.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 닉네임 화면 */
+#nickname-screen {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7c59f 50%, #efefd0 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+#nickname-screen::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,107,53,0.3) 0%, transparent 70%);
+    animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.screen-content {
+    text-align: center;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 30px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    z-index: 1;
+}
+
+#nickname-screen h1 {
+    font-size: 3em;
+    background: linear-gradient(135deg, #ff6b35, #ff4757, #ff6b35);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient 3s ease infinite;
+    margin-bottom: 10px;
+    text-shadow: none;
+}
+
+@keyframes gradient {
+    0% { background-position: 0% center; }
+    50% { background-position: 100% center; }
+    100% { background-position: 0% center; }
+}
+
+.subtitle {
+    color: #666;
+    font-size: 1.2em;
+    margin-bottom: 30px;
+}
+
+.nickname-box {
+    margin: 30px 0;
+}
+
+.nickname-box label {
+    display: block;
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+#nickname-input {
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 1.2em;
+    border: 3px solid #e9ecef;
+    border-radius: 15px;
+    outline: none;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+#nickname-input:focus {
+    border-color: #ff6b35;
+    box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+}
+
+.btn {
+    padding: 15px 40px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::after {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ff6b35 0%, #ff4757 100%);
+    color: white;
+    box-shadow: 0 5px 20px rgba(255, 107, 53, 0.4);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.5);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #a8a8a8 0%, #6c757d 100%);
+    color: white;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.instructions {
+    margin-top: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #fff5f0 0%, #ffe8e0 100%);
+    border-radius: 15px;
+    border: 2px solid rgba(255, 107, 53, 0.2);
+}
+
+.instructions h3 {
+    color: #ff6b35;
+    margin-bottom: 15px;
+}
+
+.instructions p {
+    color: #555;
+    margin: 8px 0;
+    font-size: 1em;
+}
+
+/* 게임 화면 */
+#game-screen {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #0a0a1a 0%, #1a0a2e 50%, #0a1a3e 100%);
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+#game-screen.active {
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    animation: fadeIn 0.5s ease;
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid rgba(255, 107, 53, 0.3);
+    z-index: 10;
+}
+
+.score-display, .combo-display, .lives-display, .level-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.score-label, .level-label {
+    font-size: 0.8em;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.score-value {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.4);
+    transition: all 0.1s ease;
+}
+
+.score-value.bump {
+    transform: scale(1.3);
+    color: #fff;
+}
+
+.level-value {
+    font-size: 2em;
+    font-weight: bold;
+    color: #00ff88;
+    text-shadow: 0 0 15px rgba(0, 255, 136, 0.6);
+}
+
+.combo-value {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #ff6b6b;
+    text-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+    min-height: 40px;
+    transition: all 0.1s ease;
+}
+
+/* 피버 바 */
+.fever-bar {
+    width: 150px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    border: 2px solid rgba(255, 107, 53, 0.5);
+    margin-top: 5px;
+}
+
+.fever-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ff6b35, #ff4757, #ffd700);
+    background-size: 200% 100%;
+    animation: feverFlow 1s linear infinite;
+    transition: width 0.3s ease;
+    border-radius: 8px;
+}
+
+@keyframes feverFlow {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+}
+
+.fever-fill.active {
+    width: 100%;
+    box-shadow: 0 0 20px rgba(255, 107, 53, 0.8);
+}
+
+.fever-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.7em;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.lives-value {
+    font-size: 1.5em;
+    transition: all 0.3s ease;
+}
+
+.lives-value.damage {
+    animation: damage 0.5s ease;
+}
+
+@keyframes damage {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.3) rotate(-10deg); }
+    75% { transform: scale(1.3) rotate(10deg); }
+}
+
+#game-canvas {
+    flex: 1;
+    display: block;
+    cursor: none;
+}
+
+/* 게임 오버 화면 */
+#gameover-screen {
+    background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 100%);
+    justify-content: center;
+    align-items: center;
+}
+
+#gameover-screen.active {
+    display: flex;
+}
+
+#gameover-screen .screen-content {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 240, 255, 0.98) 100%);
+}
+
+#gameover-title {
+    font-size: 2.5em;
+    color: #ff4757;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(255, 71, 87, 0.5);
+}
+
+.final-score {
+    margin: 20px 0;
+}
+
+.player-name {
+    font-size: 1.5em;
+    color: #ff6b35;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.score-text {
+    font-size: 1.2em;
+    color: #666;
+}
+
+.score-number {
+    font-size: 4em;
+    font-weight: bold;
+    background: linear-gradient(135deg, #ffd700, #ff6b35);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+}
+
+.stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 20px 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #fff5f0 0%, #ffe8e0 100%);
+    border-radius: 15px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-label {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.stat-value {
+    font-size: 2em;
+    font-weight: bold;
+    color: #ff6b35;
+}
+
+.ranking-section {
+    margin: 20px 0;
+}
+
+.ranking-section h3 {
+    color: #ff6b35;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+.ranking-list {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.ranking-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    margin: 8px 0;
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.ranking-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.ranking-item.current {
+    background: linear-gradient(135deg, #ff6b3520 0%, #ff475720 100%);
+    border: 2px solid #ff6b35;
+}
+
+.ranking-item.gold {
+    background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+    color: white;
+}
+
+.ranking-item.silver {
+    background: linear-gradient(135deg, #c0c0c0 0%, #a8a8a8 100%);
+    color: white;
+}
+
+.ranking-item.bronze {
+    background: linear-gradient(135deg, #cd7f32 0%, #a0522d 100%);
+    color: white;
+}
+
+.ranking-position {
+    font-size: 1.5em;
+    font-weight: bold;
+    min-width: 50px;
+}
+
+.ranking-name {
+    flex: 1;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-align: left;
+    margin-left: 15px;
+}
+
+.ranking-score {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #ff6b35;
+}
+
+.ranking-item.gold .ranking-score,
+.ranking-item.silver .ranking-score,
+.ranking-item.bronze .ranking-score {
+    color: white;
+}
+
+.gameover-buttons {
+    margin-top: 20px;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    #nickname-screen h1 {
+        font-size: 2em;
+    }
+    
+    .screen-content {
+        padding: 20px;
+    }
+    
+    .game-header {
+        padding: 10px 15px;
+    }
+    
+    .score-value {
+        font-size: 1.8em;
+    }
+    
+    .level-value {
+        font-size: 1.5em;
+    }
+    
+    .combo-value {
+        font-size: 1.3em;
+    }
+    
+    .fever-bar {
+        width: 100px;
+    }
+    
+    .stats {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
