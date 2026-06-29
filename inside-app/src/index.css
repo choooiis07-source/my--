@@ -63,3 +63,100 @@ button, a, [role="button"] {
     font-size: 16px !important;
   }
 }
+
+/* ====== Landing Page Styles ====== */
+.landing-root {
+  position: relative;
+  background: #000;
+  overflow-x: hidden;
+}
+
+/* 스크롤 진행 바 */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ff6b00, #ffae00);
+  z-index: 100;
+  transform-origin: left;
+}
+
+/* 그레인 텍스처 오버레이 */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 90;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* 글로우 효과 */
+.glow-orange {
+  box-shadow: 0 0 60px -10px rgba(255, 107, 0, 0.5);
+}
+
+.text-glow {
+  text-shadow: 0 0 40px rgba(255, 107, 0, 0.35);
+}
+
+/* 키프레임 */
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.anim-floaty { animation: floaty 4s ease-in-out infinite; }
+
+@keyframes pulseRing {
+  0% { transform: scale(0.8); opacity: 0.7; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+.anim-ring { animation: pulseRing 2.4s ease-out infinite; }
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.anim-gradient {
+  background-size: 200% 200%;
+  animation: gradientShift 6s ease infinite;
+}
+
+@keyframes blinkCursor {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.cursor-blink::after {
+  content: '|';
+  animation: blinkCursor 1s step-end infinite;
+  color: #ff6b00;
+  margin-left: 2px;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(120%); }
+}
+.shimmer-line {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer-line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,107,0,0.25), transparent);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* 섹션 페이드 마스크 (스크롤 오버레이) */
+.fade-mask-top {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+}
+
+/* 모바일 텍스트 스케일 보정 */
+@media screen and (max-width: 380px) {
+  .landing-hero-title { font-size: 2.6rem !important; line-height: 1.1; }
+}

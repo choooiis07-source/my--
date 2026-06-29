@@ -1,0 +1,188 @@
+export type Lang = 'ko' | 'en'
+
+export const translations = {
+  ko: {
+    nav: {
+      start: '시작하기',
+      history: '기록',
+      langLabel: 'EN',
+    },
+    hero: {
+      badge: '당신의 모임을 영화로',
+      question: '그날의 분위기,\n인사이드에 그대로.',
+      sub: '기억나지 않죠? 그 순간의 인사이드,\n놓치지 않도록 영원히 남겨드릴게요.',
+      cta: '지금 내 모임 녹음하기',
+      sample: '샘플 결과 미리보기',
+      scroll: '스크롤하여 확인',
+    },
+    problem: {
+      tag: '문제',
+      title: '가장 웃겼던 그 순간,\n어디로 갔을까요?',
+      p1: '모임이 끝나고 24시간.',
+      p2: '그날의 밈, 반전, MVP는\n기억 속에서 흐려집니다.',
+      p3: '사진은 남지만, 대화의 온기는 사라집니다.',
+      stat1: '92%',
+      stat1d: '모임 대화는 3일 뒤면 기억 못 해요',
+      stat2: '0',
+      stat2d: '지금 당장 어제 대화 떠올려보세요',
+    },
+    solution: {
+      tag: '해결책',
+      title: '한 번의 터치가\n우리의 영원한 기억으로',
+      step1: '녹음',
+      step1d: '모임 중 녹음만 켜두세요',
+      step2: '분석',
+      step2d: 'AI가 화자를 구분하고 대화를 읽어요',
+      step3: '완성',
+      step3d: 'MVP·밈·반전·엔딩이 자동 완성',
+    },
+    hooks: {
+      tag: '후킹 포인트',
+      title: '오늘의 모임이\n콘텐츠가 됩니다',
+      mvp: {
+        label: '오늘의 MVP',
+        title: '반짝인 그 한 사람',
+        desc: '대화 속에서 가장 빛난 인물을 AI가 선정해요. 이유까지 완벽하게.',
+      },
+      meme: {
+        label: '오늘의 밈',
+        title: '그날만의 전설',
+        desc: '반복된 한 마디가 밈이 됩니다. 다음 모임에서도 쓰게 될 거예요.',
+      },
+      twist: {
+        label: '반전 & 엔딩',
+        title: '아무도 예측 못 한 결말',
+        desc: '대화의 흐름을 읽고 가장 극적인 반전 순간을 포착합니다.',
+      },
+      chemistry: {
+        label: '오늘의 케미',
+        title: '우리 사이의 시그널',
+        desc: '누구와 누구의 대화가 가장 달았는지, 케미로 시각화해요.',
+      },
+    },
+    premium: {
+      tag: '프리미엄',
+      title: '오늘을 잊을 수 없게',
+      shorts: 'AI Shorts',
+      shortsd: '하이라이트를 숏츠로',
+      poster: 'AI Poster',
+      posterd: '영화 포스터처럼',
+      comic: 'AI Comic',
+      comicd: '웹툰 한 화로',
+      book: 'Memory Book',
+      bookd: '추억북으로 간직',
+    },
+    how: {
+      tag: '사용 방법',
+      title: '3초면 충분해요',
+      steps: [
+        { t: '녹음 시작', d: '모임 시작과 함께 버튼만 누르세요' },
+        { t: '그냥 즐기기', d: '대화에 집중하세요, 나머지는 Inside가 알아서 해요' },
+        { t: '결과 받기', d: '모임 끝, AI가 캐릭터를 완성해요' },
+      ],
+    },
+    cta: {
+      title: '오늘 밤의 인사이드,\n영원히 남겨볼까요?',
+      sub: '지금 시작하면 다음 모임은 잊히지 않아요.',
+      btn: '새 모임 시작하기',
+      history: '지난 모임 보기',
+    },
+    footer: {
+      tagline: 'Inside jokes deserve to last.',
+      copy: '© 2026 Inside. 모든 순간을 영원히.',
+    },
+  },
+  en: {
+    nav: {
+      start: 'Start',
+      history: 'History',
+      langLabel: 'KO',
+    },
+    hero: {
+      badge: 'Turn your hangout into a movie',
+      question: "That day's vibe —\nkept as an inside.",
+      sub: "Can't remember? We'll keep that inside joke\nalive forever.",
+      cta: 'Record my hangout now',
+      sample: 'Preview a sample result',
+      scroll: 'Scroll to explore',
+    },
+    problem: {
+      tag: 'The problem',
+      title: 'Where did that\nfunniest moment go?',
+      p1: '24 hours after the party.',
+      p2: "The memes, the twists, the MVP —\nfade from memory.",
+      p3: 'Photos remain, but the warmth of conversation vanishes.',
+      stat1: '92%',
+      stat1d: "can't recall talks 3 days later",
+      stat2: '0',
+      stat2d: 'Try recalling yesterday right now',
+    },
+    solution: {
+      tag: 'The fix',
+      title: 'One touch becomes\nour memory, forever',
+      step1: 'Record',
+      step1d: 'Just press record during the party',
+      step2: 'Analyze',
+      step2d: 'AI separates speakers & reads the talk',
+      step3: 'Done',
+      step3d: 'MVP · meme · twist · ending auto-built',
+    },
+    hooks: {
+      tag: 'Hook points',
+      title: 'Tonight becomes\ncontent',
+      mvp: {
+        label: "Tonight's MVP",
+        title: 'The one who shined',
+        desc: 'AI picks the standout of the night — with a perfect reason.',
+      },
+      meme: {
+        label: "Tonight's meme",
+        title: 'A legend born today',
+        desc: 'One repeated line becomes a meme you will reuse next time.',
+      },
+      twist: {
+        label: 'Twist & ending',
+        title: 'A finale no one predicted',
+        desc: 'We read the flow and catch the most dramatic moment.',
+      },
+      chemistry: {
+        label: "Tonight's chemistry",
+        title: 'The signal between us',
+        desc: 'Visualize whose exchange was the sweetest.',
+      },
+    },
+    premium: {
+      tag: 'Premium',
+      title: 'Make today unforgettable',
+      shorts: 'AI Shorts',
+      shortsd: 'Highlights as reels',
+      poster: 'AI Poster',
+      posterd: 'Like a movie poster',
+      comic: 'AI Comic',
+      comicd: 'One webtoon episode',
+      book: 'Memory Book',
+      bookd: 'Keep it as a keepsake',
+    },
+    how: {
+      tag: 'How it works',
+      title: '3 seconds is enough',
+      steps: [
+        { t: 'Press record', d: 'Hit the button as the party starts' },
+        { t: 'Just enjoy', d: 'Focus on the talk, Inside does the rest' },
+        { t: 'Get results', d: 'Party ends, AI builds the characters' },
+      ],
+    },
+    cta: {
+      title: "Tonight's inside joke —\nkeep it forever?",
+      sub: 'Start now and your next hangout will never be forgotten.',
+      btn: 'Start a new hangout',
+      history: 'View past hangouts',
+    },
+    footer: {
+      tagline: 'Inside jokes deserve to last.',
+      copy: '© 2026 Inside. Every moment, forever.',
+    },
+  },
+} as const
+
+export type Translation = (typeof translations)['ko']
