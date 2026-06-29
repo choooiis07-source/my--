@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>🔥 도파민 폭발 과일 자르기 🔥</title>
+  <link rel="stylesheet" crossorigin href="/assets/index-8GbiSdWh.css">
+</head>
+<body>
+    <!-- 닉네임 입력 화면 -->
+    <div id="nickname-screen" class="screen active">
+        <div class="screen-content">
+            <h1>🔥 도파민 폭발 🍉</h1>
+            <p class="subtitle">과일을 자르고 도파민을 터뜨려라!</p>
+            <div class="nickname-box">
+                <label for="nickname-input">닉네임을 입력하세요</label>
+                <input type="text" id="nickname-input" placeholder="닉네임 입력..." maxlength="10">
+                <button id="start-btn" class="btn btn-primary">게임 시작 🎮</button>
+            </div>
+            <div class="instructions">
+                <h3>🎯 게임 방법</h3>
+                <p>🖱️ 마우스를 움직여 과일을 자르세요</p>
+                <p>💣 폭탄은 피하세요!</p>
+                <p>⚡ 연속 자르기 = 콤보 폭발!</p>
+                <p>🔥 5콤보 이상 = 피버 모드!</p>
+                <p>⭐ 황금과일 = 슬로우 모션!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 게임 화면 -->
+    <div id="game-screen" class="screen">
+        <div class="game-header">
+            <div class="score-display">
+                <span class="score-label">점수</span>
+                <span id="score" class="score-value">0</span>
+            </div>
+            <div class="level-display">
+                <span class="level-label">LEVEL</span>
+                <span id="level" class="level-value">1</span>
+            </div>
+            <div class="combo-display">
+                <span id="combo" class="combo-value"></span>
+                <div id="fever-bar" class="fever-bar">
+                    <div id="fever-fill" class="fever-fill"></div>
+                    <span id="fever-text" class="fever-text"></span>
+                </div>
+            </div>
+            <div class="lives-display">
+                <span id="lives" class="lives-value">❤️❤️❤️</span>
+            </div>
+        </div>
+        <canvas id="game-canvas"></canvas>
+    </div>
+
+    <!-- 게임 오버 화면 -->
+    <div id="gameover-screen" class="screen">
+        <div class="screen-content">
+            <h1 id="gameover-title">게임 오버</h1>
+            <div class="final-score">
+                <p class="player-name" id="final-name"></p>
+                <p class="score-text">최종 점수</p>
+                <p class="score-number" id="final-score">0</p>
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-label">자른 과일</span>
+                    <span class="stat-value" id="stat-fruits">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">최대 콤보</span>
+                    <span class="stat-value" id="stat-combo">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">도달 레벨</span>
+                    <span class="stat-value" id="stat-level">1</span>
+                </div>
+            </div>
+            <div class="ranking-section">
+                <h3>🏆 순위</h3>
+                <div id="ranking-list" class="ranking-list"></div>
+            </div>
+            <div class="gameover-buttons">
+                <button id="retry-btn" class="btn btn-primary">다시 하기 🔄</button>
+                <button id="home-btn" class="btn btn-secondary">홈으로 🏠</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=3"></script>
+</body>
+</html>
