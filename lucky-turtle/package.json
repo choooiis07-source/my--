@@ -1,0 +1,73 @@
+{
+  "name": "lucky-turtle",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A tiny lucky turtle that wanders across your desktop.",
+  "author": "Lucky Turtle",
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "dist-electron/main.js",
+  "allowScripts": {
+    "electron@42.5.1": true,
+    "esbuild@0.25.12": true
+  },
+  "scripts": {
+    "postinstall": "node scripts/repair-electron.cjs",
+    "dev": "concurrently -k \"vite\" \"npm:dev:electron\"",
+    "dev:electron": "wait-on tcp:43127 && tsc -p electron/tsconfig.json && node scripts/run-electron.cjs --dev",
+    "build": "tsc -b && vite build && tsc -p electron/tsconfig.json",
+    "dist:win": "npm run build && node scripts/build-windows.cjs",
+    "start": "node scripts/run-electron.cjs"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.10",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.4.1",
+    "concurrently": "^9.2.0",
+    "electron": "^42.5.1",
+    "electron-builder": "^26.15.3",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5",
+    "wait-on": "^8.0.3"
+  },
+  "build": {
+    "appId": "com.luckyturtle.desktop",
+    "productName": "Lucky Turtle",
+    "executableName": "LuckyTurtle",
+    "asar": true,
+    "electronDist": "node_modules/electron/dist",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "public/assets/turtle-3d-front.png",
+        "to": "tray-icon.png"
+      }
+    ],
+    "win": {
+      "target": ["nsis"],
+      "icon": "public/assets/turtle-3d-front.png",
+      "signExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Lucky Turtle",
+      "artifactName": "Lucky-Turtle-Setup-${version}.${ext}"
+    }
+  }
+}
