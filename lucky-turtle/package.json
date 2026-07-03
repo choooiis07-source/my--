@@ -16,6 +16,7 @@
     "dev": "concurrently -k \"vite\" \"npm:dev:electron\"",
     "dev:electron": "wait-on tcp:43127 && tsc -p electron/tsconfig.json && node scripts/run-electron.cjs --dev",
     "build": "tsc -b && vite build && tsc -p electron/tsconfig.json",
+    "build:web": "tsc -b && vite build",
     "dist:win": "npm run build && node scripts/build-windows.cjs",
     "start": "node scripts/run-electron.cjs"
   },

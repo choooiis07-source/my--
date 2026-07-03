@@ -1,9 +1,9 @@
 node_modules
+release
 dist
 dist-electron
-release
 .cache
-.vercel
+design
+public
 *.log
-debug-overlay.png
-.DS_Store
+*.zip
