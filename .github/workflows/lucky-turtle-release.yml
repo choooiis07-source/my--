@@ -1,0 +1,45 @@
+name: Lucky Turtle Windows Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'lucky-turtle-v*'
+
+permissions:
+  contents: write
+
+jobs:
+  windows-release:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: lucky-turtle
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: lucky-turtle/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Windows installer
+        run: npm run dist:win
+
+      - name: Publish GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ github.ref_name }}" `
+            "release/Lucky-Turtle-Setup-0.1.0.exe" `
+            "release/Lucky-Turtle-Setup-0.1.0.exe.blockmap" `
+            --title "Lucky Turtle 0.1.0" `
+            --notes "행운의 거북이 Windows 베타 첫 공개 버전입니다. 설치 파일을 내려받아 실행하면 거북이가 화면 위를 산책합니다."
