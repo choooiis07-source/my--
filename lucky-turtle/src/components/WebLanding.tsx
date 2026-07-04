@@ -196,7 +196,7 @@ export function WebLanding() {
             <p>{text.storyBody}</p>
             <ol>{text.storySteps.map((step, index) => <li className={storyStep === index ? 'active' : ''} key={step}><span>0{index + 1}</span>{step}</li>)}</ol>
           </div>
-          <div className={`story-monitor story-monitor--step-${storyStep}`} data-reveal>
+          <div className={`story-monitor story-monitor--step-${storyStep}`}>
             <div className="story-monitor__bar"><i /><i /><i /><span>today-project.tsx</span></div>
             <div className="story-monitor__screen">
               <div className="story-monitor__sidebar"><i /><i /><i /><i /></div>
