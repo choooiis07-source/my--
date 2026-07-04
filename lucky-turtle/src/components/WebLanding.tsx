@@ -38,7 +38,7 @@ const copy = {
     moodLabels: ['산책 중', '반가워!', '조금 귀찮아', '화났어!', '슬퍼…', '등딱지로 숨기'],
     customize: '내 거북이 설정 미리보기',
     finalEyebrow: 'YOUR LITTLE LUCK STARTS HERE',
-    finalTitle: '오늘부터, 화면 한쪽에\n작은 행운을 두세요.',
+    finalTitle: '오늘부터,\n화면 한쪽에\n작은 행운을.',
     finalBody: '다운로드하고 실행하면 끝. 행운의 거북이는 당신이 어떤 앱을 사용하든 곁에 머뭅니다.',
     finalCta: '무료로 시작하기',
     safety: '설치 파일 · Windows 전용 · 언제든 트레이에서 종료 가능',
@@ -75,7 +75,7 @@ const copy = {
     moodLabels: ['Just strolling', 'Good to see you!', 'A little annoyed', 'Now I’m mad!', 'That hurt…', 'Hiding in my shell'],
     customize: 'Preview my turtle settings',
     finalEyebrow: 'YOUR LITTLE LUCK STARTS HERE',
-    finalTitle: 'Put a little luck\nin the corner of your screen.',
+    finalTitle: 'Put a little luck\nin the corner\nof your screen.',
     finalBody: 'Download, run, and you are done. Lucky Turtle stays nearby, whichever app you use.',
     finalCta: 'Start for free',
     safety: 'Windows installer · Quit anytime from the system tray',
@@ -257,7 +257,13 @@ export function WebLanding() {
           <a className="cta cta--light" href={DOWNLOAD_URL}><DownloadIcon />{text.finalCta}</a>
           <small>{text.safety}</small>
         </div>
-        <div className="final-cta__turtle" aria-hidden="true"><Turtle shellColor="#d6a95b" skinColor="#9fba7e" mood="happy" view="right" /></div>
+        <div className="final-cta__visual" aria-hidden="true">
+          <span className="final-cta__visual-label">READY TO WALK</span>
+          <div className="final-cta__turtle"><Turtle shellColor="#5f8063" skinColor="#91aa77" mood="happy" view="right" /></div>
+          <span className="final-cta__ground" />
+          <span className="final-cta__spark final-cta__spark--one">✦</span>
+          <span className="final-cta__spark final-cta__spark--two">✦</span>
+        </div>
       </section>
 
       <footer className="landing-footer"><span>{text.footer}</span><span>© 2026</span><button onClick={() => setLocale(locale === 'ko' ? 'en' : 'ko')}>{locale === 'ko' ? 'English' : '한국어'}</button></footer>
