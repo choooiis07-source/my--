@@ -4,7 +4,7 @@ import { Turtle } from './Turtle'
 type Locale = 'ko' | 'en'
 type Mood = 'walking' | 'happy' | 'annoyed' | 'angry' | 'sad' | 'shy' | 'sleepy'
 
-const DOWNLOAD_URL = 'https://github.com/choooiis07-source/my--/releases/latest/download/Lucky-Turtle-Setup-0.1.0.exe'
+const DOWNLOAD_URL = 'https://github.com/choooiis07-source/my--/releases/latest/download/Lucky-Turtle-Windows-0.1.0.zip'
 
 const copy = {
   ko: {
@@ -16,7 +16,7 @@ const copy = {
     heroBody: '어떤 앱을 열어도, 작은 바다거북이가 화면 가장자리를 유유히 산책해요. 방해하지 않고 곁에 머무는 가장 귀여운 행운입니다.',
     primaryCta: 'Windows에 거북이 데려오기',
     secondaryCta: '먼저 만져보기',
-    downloadMeta: 'Windows 10/11 · Beta 0.1 · 무료',
+    downloadMeta: 'Windows 10/11 · ZIP 압축 해제 후 설치 · 무료',
     badges: ['항상 화면 위에', '감정으로 반응', '화면 선을 탐색'],
     scroll: 'SCROLL TO MEET YOUR LUCK',
     storyEyebrow: '01 / ALIVE ON YOUR SCREEN',
@@ -41,7 +41,7 @@ const copy = {
     finalTitle: '오늘부터,\n화면 한쪽에\n작은 행운을.',
     finalBody: '다운로드하고 실행하면 끝. 행운의 거북이는 당신이 어떤 앱을 사용하든 곁에 머뭅니다.',
     finalCta: '무료로 시작하기',
-    safety: '설치 파일 · Windows 전용 · 언제든 트레이에서 종료 가능',
+    safety: 'ZIP 압축 해제 → 설치 파일 실행 · Windows 전용 · 언제든 트레이에서 종료 가능',
     footer: '행운의 거북이 · Lucky Turtle',
   },
   en: {
@@ -53,7 +53,7 @@ const copy = {
     heroBody: 'A tiny sea turtle quietly explores the edges of your screen, no matter which app is open. A gentle bit of luck that stays without getting in your way.',
     primaryCta: 'Bring Turtle to Windows',
     secondaryCta: 'Meet it first',
-    downloadMeta: 'Windows 10/11 · Beta 0.1 · Free',
+    downloadMeta: 'Windows 10/11 · Unzip, then install · Free',
     badges: ['Always on top', 'Emotionally alive', 'Explores screen lines'],
     scroll: 'SCROLL TO MEET YOUR LUCK',
     storyEyebrow: '01 / ALIVE ON YOUR SCREEN',
@@ -78,7 +78,7 @@ const copy = {
     finalTitle: 'Put a little luck\nin the corner\nof your screen.',
     finalBody: 'Download, run, and you are done. Lucky Turtle stays nearby, whichever app you use.',
     finalCta: 'Start for free',
-    safety: 'Windows installer · Quit anytime from the system tray',
+    safety: 'Unzip and run the installer · Quit anytime from the system tray',
     footer: 'Lucky Turtle · 행운의 거북이',
   },
 } as const

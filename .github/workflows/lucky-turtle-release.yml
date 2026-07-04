@@ -20,23 +20,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Assemble verified Windows installer
+      - name: Prepare verified Windows package
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force release | Out-Null
-          $base = "https://lucky-turtle.vercel.app/downloads/Lucky-Turtle-Setup-0.1.0.exe.part"
-          0..2 | ForEach-Object { Invoke-WebRequest "$base$_" -OutFile "release/part$_" }
-          $output = [IO.File]::Create("release/Lucky-Turtle-Setup-0.1.0.exe")
-          0..2 | ForEach-Object {
-            $input = [IO.File]::OpenRead("release/part$_")
-            $input.CopyTo($output)
-            $input.Dispose()
-          }
-          $output.Dispose()
+          Invoke-WebRequest `
+            "https://github.com/choooiis07-source/my--/releases/download/lucky-turtle-v0.1.0-release/Lucky-Turtle-Setup-0.1.0.exe" `
+            -OutFile "release/Lucky-Turtle-Setup-0.1.0.exe"
           $hash = (Get-FileHash "release/Lucky-Turtle-Setup-0.1.0.exe" -Algorithm SHA256).Hash
           if ($hash -ne "9CCFF24ED78C78133654DE82DB6139F09A99D2E257D0EB262C68DE3327B4D853") {
             throw "Installer checksum mismatch: $hash"
           }
+          Compress-Archive `
+            -LiteralPath "release/Lucky-Turtle-Setup-0.1.0.exe" `
+            -DestinationPath "release/Lucky-Turtle-Windows-0.1.0.zip" `
+            -CompressionLevel Optimal
 
       - name: Publish GitHub release
         shell: pwsh
@@ -44,6 +42,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "${{ github.ref_name }}" `
-            "release/Lucky-Turtle-Setup-0.1.0.exe" `
+            "release/Lucky-Turtle-Windows-0.1.0.zip" `
             --title "Lucky Turtle 0.1.0" `
             --notes "행운의 거북이 Windows 베타 첫 공개 버전입니다. 설치 파일을 내려받아 실행하면 거북이가 화면 위를 산책합니다."
