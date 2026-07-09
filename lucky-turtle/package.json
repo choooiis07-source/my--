@@ -1,7 +1,7 @@
 {
   "name": "lucky-turtle",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A tiny lucky turtle that wanders across your desktop.",
   "author": "Lucky Turtle",
   "license": "UNLICENSED",
