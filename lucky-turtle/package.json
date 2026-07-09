@@ -1,7 +1,7 @@
 {
   "name": "lucky-turtle",
   "private": true,
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A tiny lucky turtle that wanders across your desktop.",
   "author": "Lucky Turtle",
   "license": "UNLICENSED",
@@ -58,7 +58,6 @@
     ],
     "win": {
       "target": ["nsis"],
-      "icon": "public/assets/turtle-3d-front.png",
       "signExecutable": false
     },
     "nsis": {

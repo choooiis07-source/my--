@@ -32,7 +32,7 @@ npm start
 npm run dist:win
 ```
 
-결과는 `release/Lucky-Turtle-Setup-0.1.1.exe`에 생성됩니다. 공개 배포 전에는 Windows 코드 서명 인증서를 연결해야 SmartScreen 경고를 줄일 수 있습니다.
+결과는 `release/Lucky-Turtle-Setup-0.1.2.exe`에 생성됩니다. 공개 배포 전에는 Windows 코드 서명 인증서를 연결해야 SmartScreen 경고를 줄일 수 있습니다.
 
 거북이에 마우스를 올리면 우측에 설정 버튼이 나타납니다.
 
