@@ -94,8 +94,10 @@ function DownloadIcon() {
 export function WebLanding() {
   const [locale, setLocale] = useState<Locale>(() => localStorage.getItem('lucky-turtle-locale') === 'en' ? 'en' : 'ko')
   const [touches, setTouches] = useState(0)
+  const [touchPulse, setTouchPulse] = useState(0)
   const [storyStep, setStoryStep] = useState(0)
   const storyRef = useRef<HTMLElement>(null)
+  const touchResetTimer = useRef<number | undefined>(undefined)
   const text = copy[locale]
   const moodSequence: Mood[] = ['walking', 'happy', 'annoyed', 'angry', 'sad', 'shy']
   const mood = moodSequence[Math.min(touches, moodSequence.length - 1)]
@@ -143,7 +145,14 @@ export function WebLanding() {
     }
   }, [])
 
-  const cycleMood = () => setTouches((count) => count >= 5 ? 0 : count + 1)
+  const touchTurtle = () => {
+    window.clearTimeout(touchResetTimer.current)
+    setTouches((count) => count >= 5 ? 1 : count + 1)
+    setTouchPulse((count) => count + 1)
+    touchResetTimer.current = window.setTimeout(() => setTouches(0), 4200)
+  }
+
+  useEffect(() => () => window.clearTimeout(touchResetTimer.current), [])
 
   return (
     <main className="landing">
@@ -236,14 +245,14 @@ export function WebLanding() {
           <h2>{text.demoTitle.split('\n').map((line) => <span key={line}>{line}</span>)}</h2>
           <p>{text.demoBody}</p>
           <div className="demo__count"><strong>0{touches}</strong><span>{text.touchCount}</span></div>
-          <p className="demo__mood">“{text.moodLabels[touches]}”</p>
+          <p className="demo__mood" aria-live="polite">“{text.moodLabels[touches]}”</p>
         </div>
         <div className={`demo__stage demo__stage--${mood}`} data-reveal>
           <span className="demo__halo" aria-hidden="true" />
-          <button className="demo__turtle" onClick={cycleMood} aria-label={text.touch}>
+          <button key={touchPulse} className="demo__turtle" type="button" onClick={touchTurtle} aria-label={text.touch}>
             <Turtle shellColor="#5f8063" skinColor="#91aa77" mood={mood} view="left" isMoving={touches === 0} />
           </button>
-          <button className="demo__touch-button" onClick={cycleMood}><span>+</span>{text.touch}</button>
+          <button className="demo__touch-button" type="button" onClick={touchTurtle}><span>+</span>{text.touch}</button>
           <a className="demo__customize" href="?mode=settings">{text.customize}<ArrowIcon /></a>
         </div>
       </section>

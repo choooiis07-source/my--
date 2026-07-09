@@ -29,6 +29,7 @@ const defaults: TurtleSettings = {
 let overlayWindow: BrowserWindow | null = null
 let settingsWindow: BrowserWindow | null = null
 let tray: Tray | null = null
+let overlayKeepAliveTimer: ReturnType<typeof setInterval> | null = null
 
 if (!app.requestSingleInstanceLock()) app.quit()
 
@@ -77,6 +78,7 @@ function desktopEnvironment() {
 }
 
 type VerticalRail = { displayId: number; x: number; top: number; bottom: number; strength: number }
+type RailSegment = { top: number; bottom: number; hits: number; bottomHits: number; difference: number }
 
 function detectVerticalRails(
   bitmap: Buffer,
@@ -84,13 +86,19 @@ function detectVerticalRails(
   height: number,
   displayId: number,
   displayBounds: Electron.Rectangle,
+  displayWorkArea: Electron.Rectangle,
 ): VerticalRail[] {
-  const candidates: Array<{ x: number; score: number }> = []
+  const candidates: Array<{ x: number; top: number; bottom: number; score: number }> = []
   const sampleStep = 3
-  const startY = Math.floor(height * 0.08)
-  const bottomStart = Math.floor(height * 0.64)
+  const workTop = Math.max(0, Math.floor(((displayWorkArea.y - displayBounds.y) / displayBounds.height) * height))
+  const workBottom = Math.min(height - 1, Math.ceil(((displayWorkArea.y + displayWorkArea.height - displayBounds.y) / displayBounds.height) * height))
+  const workHeight = Math.max(1, workBottom - workTop)
+  const startY = workTop + Math.floor(workHeight * 0.06)
+  const bottomStart = workTop + Math.floor(workHeight * 0.7)
   const samples = Math.max(1, Math.floor((height - startY) / sampleStep))
-  const bottomSamples = Math.max(1, Math.floor((height - bottomStart) / sampleStep))
+  const bottomSamples = Math.max(1, Math.floor((workBottom - bottomStart) / sampleStep))
+  const minSegmentHeight = workHeight * 0.38
+  const requiredBottom = workBottom - workHeight * 0.16
 
   const luminance = (x: number, y: number) => {
     const offset = (y * width + x) * 4
@@ -98,29 +106,79 @@ function detectVerticalRails(
   }
 
   for (let x = 2; x < width - 2; x += 2) {
-    let hits = 0
-    let bottomHits = 0
-    let totalDifference = 0
-    for (let y = startY; y < height; y += sampleStep) {
+    let currentStart = 0
+    let currentEnd = 0
+    let currentHits = 0
+    let currentBottomHits = 0
+    let currentDifference = 0
+    let currentGap = 0
+    const segments: RailSegment[] = []
+
+    const finishSegment = () => {
+      if (currentHits === 0) return null
+      const segmentHeight = currentEnd - currentStart
+      const segmentSamples = Math.max(1, Math.floor(segmentHeight / sampleStep))
+      const density = currentHits / segmentSamples
+      const bottomDensity = currentBottomHits / bottomSamples
+      const averageDifference = currentDifference / Math.max(1, currentHits)
+      const reachesWalkingLine = currentEnd >= requiredBottom
+      if (
+        segmentHeight >= minSegmentHeight &&
+        density >= 0.5 &&
+        bottomDensity >= 0.32 &&
+        averageDifference >= 30 &&
+        reachesWalkingLine
+      ) {
+        return {
+          top: currentStart,
+          bottom: currentEnd,
+          hits: currentHits,
+          bottomHits: currentBottomHits,
+          difference: currentDifference,
+        }
+      }
+      return null
+    }
+
+    for (let y = startY; y <= workBottom; y += sampleStep) {
       const difference = Math.max(
         Math.abs(luminance(x, y) - luminance(x - 1, y)),
         Math.abs(luminance(x + 1, y) - luminance(x, y)),
       )
-      totalDifference += difference
-      if (difference > 22) {
-        hits += 1
-        if (y >= bottomStart) bottomHits += 1
+      if (difference > 30) {
+        if (currentHits === 0) currentStart = y
+        currentEnd = y
+        currentHits += 1
+        currentDifference += difference
+        currentGap = 0
+        if (y >= bottomStart) currentBottomHits += 1
+      } else if (currentHits > 0) {
+        currentGap += 1
+        if (currentGap > 2) {
+          const segment = finishSegment()
+          if (segment) segments.push(segment)
+          currentStart = 0
+          currentEnd = 0
+          currentHits = 0
+          currentBottomHits = 0
+          currentDifference = 0
+          currentGap = 0
+        }
       }
     }
-    const continuity = hits / samples
-    const reachesBottom = bottomHits / bottomSamples
-    const averageDifference = totalDifference / samples
-    if (continuity > 0.2 && reachesBottom > 0.13 && averageDifference > 7) {
-      candidates.push({ x, score: continuity * 0.65 + reachesBottom * 0.35 })
+    const finalSegment = finishSegment()
+    if (finalSegment) segments.push(finalSegment)
+    const bestSegment = segments.sort((a, b) => b.hits - a.hits)[0]
+    if (bestSegment) {
+      const segmentHeight = bestSegment.bottom - bestSegment.top
+      const continuity = bestSegment.hits / samples
+      const reachesBottom = bestSegment.bottomHits / bottomSamples
+      const heightScore = Math.min(1, segmentHeight / Math.max(1, workHeight))
+      candidates.push({ x, top: bestSegment.top, bottom: bestSegment.bottom, score: continuity * 0.45 + reachesBottom * 0.25 + heightScore * 0.3 })
     }
   }
 
-  const grouped: Array<{ x: number; score: number }> = []
+  const grouped: Array<{ x: number; top: number; bottom: number; score: number }> = []
   for (const candidate of candidates) {
     const last = grouped.at(-1)
     if (last && candidate.x - last.x <= 5) {
@@ -137,8 +195,8 @@ function detectVerticalRails(
     .map((candidate) => ({
       displayId,
       x: displayBounds.x + (candidate.x / width) * displayBounds.width,
-      top: displayBounds.y + displayBounds.height * 0.12,
-      bottom: displayBounds.y + displayBounds.height * 0.94,
+      top: displayBounds.y + (candidate.top / height) * displayBounds.height,
+      bottom: displayBounds.y + (candidate.bottom / height) * displayBounds.height,
       strength: candidate.score,
     }))
 }
@@ -154,7 +212,7 @@ async function scanVerticalRails(): Promise<VerticalRail[]> {
     const display = displays.find((item) => String(item.id) === source.display_id)
     if (!display || source.thumbnail.isEmpty()) return []
     const size = source.thumbnail.getSize()
-    return detectVerticalRails(source.thumbnail.toBitmap(), size.width, size.height, display.id, display.workArea)
+    return detectVerticalRails(source.thumbnail.toBitmap(), size.width, size.height, display.id, display.bounds, display.workArea)
   })
 }
 
@@ -164,6 +222,15 @@ async function load(window: BrowserWindow, mode: 'overlay' | 'settings') {
     return
   }
   await window.loadFile(join(dirname, '../dist/index.html'), { query: { mode } })
+}
+
+function keepOverlayOnTop() {
+  if (!overlayWindow || overlayWindow.isDestroyed()) return
+  overlayWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
+  overlayWindow.setAlwaysOnTop(true, 'screen-saver')
+  overlayWindow.setSkipTaskbar(true)
+  if (!overlayWindow.isVisible()) overlayWindow.showInactive()
+  overlayWindow.moveTop()
 }
 
 function createOverlay() {
@@ -189,8 +256,18 @@ function createOverlay() {
   overlayWindow.setAlwaysOnTop(true, 'screen-saver')
   overlayWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
   overlayWindow.setIgnoreMouseEvents(true, { forward: true })
+  overlayWindow.on('show', keepOverlayOnTop)
+  overlayWindow.on('restore', keepOverlayOnTop)
+  overlayWindow.on('blur', keepOverlayOnTop)
   void load(overlayWindow, 'overlay')
-  overlayWindow.on('closed', () => { overlayWindow = null })
+  if (overlayKeepAliveTimer) clearInterval(overlayKeepAliveTimer)
+  overlayKeepAliveTimer = setInterval(keepOverlayOnTop, 2500)
+  keepOverlayOnTop()
+  overlayWindow.on('closed', () => {
+    if (overlayKeepAliveTimer) clearInterval(overlayKeepAliveTimer)
+    overlayKeepAliveTimer = null
+    overlayWindow = null
+  })
 }
 
 function createSettings() {
@@ -236,6 +313,7 @@ function createTray() {
 function syncDesktop() {
   if (!overlayWindow) return
   overlayWindow.setBounds(virtualDesktopBounds())
+  keepOverlayOnTop()
   overlayWindow.webContents.send('desktop:changed', desktopEnvironment())
 }
 

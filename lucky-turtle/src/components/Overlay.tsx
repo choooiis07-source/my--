@@ -115,6 +115,7 @@ export function Overlay() {
         const detected = await window.turtleDesktop.scanVerticalLines()
         if (cancelled || detected.length === 0 || modeRef.current !== 'bottom') return
         const currentDisplay = displayForPoint(environment, positionRef.current)
+        const currentBottom = positionRef.current.y + TURTLE_HEIGHT
         const available = detected
           .filter((rail) => rail.displayId === currentDisplay.id)
           .map((rail) => ({
@@ -123,6 +124,12 @@ export function Overlay() {
             localTop: rail.top - environment.origin.y,
             localBottom: rail.bottom - environment.origin.y,
           }))
+          .filter((rail) => (
+            rail.strength >= 0.48 &&
+            rail.localBottom >= currentBottom - 90 &&
+            rail.localTop <= positionRef.current.y - 150 &&
+            Math.abs(rail.localX - positionRef.current.x) < localArea(currentDisplay.workArea, environment).width * 0.55
+          ))
           .sort((a, b) => b.strength - a.strength)
         const rail = available[0]
         if (!rail) return
