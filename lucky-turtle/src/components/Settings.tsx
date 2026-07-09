@@ -36,7 +36,7 @@ export function Settings() {
         <input maxLength={12} value={settings.name} onChange={(event) => update('name', event.target.value)} />
       </label>
       <fieldset>
-        <legend>오늘의 등딱지 색</legend>
+        <legend>오늘의 거북이 컬러</legend>
         <div className="color-list">
           {shellColors.map((color) => (
             <button
@@ -44,7 +44,7 @@ export function Settings() {
               className={settings.shellColor === color ? 'color color--active' : 'color'}
               style={{ backgroundColor: color }}
               onClick={() => update('shellColor', color)}
-              aria-label={`등딱지 색 ${color}`}
+              aria-label={`거북이 컬러 ${color}`}
             />
           ))}
           <input className="custom-color" type="color" value={settings.shellColor} onChange={(event) => update('shellColor', event.target.value)} />

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react'
 import { Turtle } from './Turtle'
 import type { DesktopEnvironment, Rectangle, TurtleSettings, VerticalRail } from '../types'
 
@@ -37,6 +37,21 @@ function bottomPoint(desktop: DesktopEnvironment, current: Point, preferredX?: n
   }
 }
 
+function clampPoint(point: Point, desktop: DesktopEnvironment | null): Point {
+  if (!desktop) {
+    return {
+      x: Math.max(0, Math.min(window.innerWidth - TURTLE_WIDTH, point.x)),
+      y: Math.max(0, Math.min(window.innerHeight - TURTLE_HEIGHT, point.y)),
+    }
+  }
+  const display = displayForPoint(desktop, point)
+  const area = localArea(display.workArea, desktop)
+  return {
+    x: Math.max(area.x, Math.min(area.x + area.width - TURTLE_WIDTH, point.x)),
+    y: Math.max(area.y, Math.min(area.y + area.height - TURTLE_HEIGHT, point.y)),
+  }
+}
+
 export function Overlay() {
   const [settings, setSettings] = useState(defaults)
   const [desktop, setDesktop] = useState<DesktopEnvironment | null>(null)
@@ -47,10 +62,15 @@ export function Overlay() {
   const [mood, setMood] = useState<'walking' | 'happy' | 'annoyed' | 'angry' | 'sad' | 'shy' | 'sleepy'>('walking')
   const [touches, setTouches] = useState(0)
   const [view, setView] = useState<'front' | 'back' | 'left' | 'right'>('left')
+  const [isDragging, setIsDragging] = useState(false)
   const positionRef = useRef(position)
   const desktopRef = useRef<DesktopEnvironment | null>(null)
   const settingsRef = useRef(settings)
   const modeRef = useRef<RouteMode>('bottom')
+  const isDraggingRef = useRef(false)
+  const dragOffset = useRef<Point>({ x: 0, y: 0 })
+  const dragStartedAt = useRef<Point>({ x: 0, y: 0 })
+  const didDrag = useRef(false)
   const lastTime = useRef(performance.now())
   const lastClimb = useRef(0)
   const moodTimer = useRef<number | undefined>(undefined)
@@ -60,6 +80,7 @@ export function Overlay() {
   useEffect(() => { desktopRef.current = desktop }, [desktop])
   useEffect(() => { settingsRef.current = settings }, [settings])
   useEffect(() => { modeRef.current = mode }, [mode])
+  useEffect(() => { isDraggingRef.current = isDragging }, [isDragging])
 
   const settleOnBottom = useCallback((environment: DesktopEnvironment) => {
     const next = bottomPoint(environment, positionRef.current)
@@ -89,7 +110,7 @@ export function Overlay() {
     let cancelled = false
     const scan = async () => {
       const environment = desktopRef.current
-      if (!settingsRef.current.detectScreenLines || !environment || modeRef.current !== 'bottom' || Date.now() - lastClimb.current < 12_000) return
+      if (isDraggingRef.current || !settingsRef.current.detectScreenLines || !environment || modeRef.current !== 'bottom' || Date.now() - lastClimb.current < 12_000) return
       try {
         const detected = await window.turtleDesktop.scanVerticalLines()
         if (cancelled || detected.length === 0 || modeRef.current !== 'bottom') return
@@ -119,7 +140,7 @@ export function Overlay() {
   }, [])
 
   useEffect(() => {
-    if (!desktop || mood === 'shy') return
+    if (!desktop || mood === 'shy' || isDragging) return
     let frame = 0
     let arrivalTimer = 0
     let arrived = false
@@ -178,7 +199,7 @@ export function Overlay() {
     }
     frame = requestAnimationFrame(animate)
     return () => { cancelAnimationFrame(frame); window.clearTimeout(arrivalTimer) }
-  }, [activeRail, desktop, mode, mood, settings.speed, target])
+  }, [activeRail, desktop, isDragging, mode, mood, settings.speed, target])
 
   const reactToTouch = useCallback(() => {
     const count = touches + 1
@@ -202,7 +223,61 @@ export function Overlay() {
     }, 4500)
   }, [touches])
 
-  const isMoving = mood !== 'shy' && Math.hypot(target.x - position.x, target.y - position.y) > 5
+  const startDrag = useCallback((event: ReactMouseEvent<HTMLButtonElement>) => {
+    if (event.button !== 0) return
+    event.preventDefault()
+    window.turtleDesktop.setMouseInteractive(true)
+    isDraggingRef.current = true
+    didDrag.current = false
+    dragStartedAt.current = { x: event.clientX, y: event.clientY }
+    dragOffset.current = { x: event.clientX - positionRef.current.x, y: event.clientY - positionRef.current.y }
+    setIsDragging(true)
+    setMood((current) => current === 'shy' ? 'walking' : current)
+    setActiveRail(null)
+    setMode('bottom')
+    modeRef.current = 'bottom'
+  }, [])
+
+  useEffect(() => {
+    if (!isDragging) return
+    const move = (event: MouseEvent) => {
+      const raw = { x: event.clientX - dragOffset.current.x, y: event.clientY - dragOffset.current.y }
+      const next = clampPoint(raw, desktopRef.current)
+      const moved = Math.hypot(event.clientX - dragStartedAt.current.x, event.clientY - dragStartedAt.current.y)
+      if (moved > 4) didDrag.current = true
+
+      const dx = next.x - positionRef.current.x
+      const dy = next.y - positionRef.current.y
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 1) setView(dx >= 0 ? 'right' : 'left')
+      if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 1) setView(dy >= 0 ? 'front' : 'back')
+
+      positionRef.current = next
+      setPosition(next)
+      setTarget(next)
+    }
+    const stop = () => {
+      isDraggingRef.current = false
+      setIsDragging(false)
+      if (!didDrag.current) {
+        reactToTouch()
+      }
+      window.turtleDesktop.setMouseInteractive(false)
+      window.setTimeout(() => {
+        const environment = desktopRef.current
+        if (environment && !isDraggingRef.current && modeRef.current === 'bottom') {
+          setTarget(bottomPoint(environment, positionRef.current, positionRef.current.x))
+        }
+      }, 650)
+    }
+    window.addEventListener('mousemove', move)
+    window.addEventListener('mouseup', stop, { once: true })
+    return () => {
+      window.removeEventListener('mousemove', move)
+      window.removeEventListener('mouseup', stop)
+    }
+  }, [isDragging, reactToTouch])
+
+  const isMoving = !isDragging && mood !== 'shy' && Math.hypot(target.x - position.x, target.y - position.y) > 5
 
   return (
     <main className="overlay">
@@ -210,9 +285,9 @@ export function Overlay() {
         className="turtle-zone"
         style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0)` }}
         onMouseEnter={() => window.turtleDesktop.setMouseInteractive(true)}
-        onMouseLeave={() => window.turtleDesktop.setMouseInteractive(false)}
+        onMouseLeave={() => { if (!isDraggingRef.current) window.turtleDesktop.setMouseInteractive(false) }}
       >
-        <button className="turtle-button" onClick={reactToTouch} aria-label={`${settings.name} 쓰다듬기`}>
+        <button className="turtle-button" onMouseDown={startDrag} aria-label={`${settings.name} 쓰다듬기`}>
           <Turtle shellColor={settings.shellColor} skinColor={settings.skinColor} mood={mood} view={view} isMoving={isMoving} />
         </button>
         <button className="settings-button" onClick={() => window.turtleDesktop.openSettings()} aria-label="거북이 설정">⚙</button>
