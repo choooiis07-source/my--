@@ -4,7 +4,7 @@ import { Turtle } from './Turtle'
 type Locale = 'ko' | 'en'
 type Mood = 'walking' | 'happy' | 'annoyed' | 'angry' | 'sad' | 'shy' | 'sleepy'
 
-const DOWNLOAD_URL = 'https://github.com/choooiis07-source/my--/releases/latest/download/Lucky-Turtle-Windows-0.1.0.zip'
+const DOWNLOAD_URL = 'https://github.com/choooiis07-source/my--/releases/latest/download/Lucky-Turtle-Windows.zip'
 
 const copy = {
   ko: {
